@@ -1,0 +1,131 @@
+.login .container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.login-tabs {
+  position: absolute;
+  padding: 15px;
+  background: var(--background);
+  border-radius: 15px;
+  text-align: center;
+  min-width: 40%;
+}
+
+.login-home,
+.login-offline,
+.login-AZauth,
+.login-AZauth-A2F {
+  display: none;
+}
+
+.login-text {
+  font-size: 1.3rem;
+}
+
+/* === BOTONES PRINCIPALES === */
+.connect,
+.cancel {
+  background: none;
+  color: var(--color);
+  border: solid 4px black;
+  border-radius: 10px;
+  padding: 0.3rem 4rem;
+  font-size: inherit;
+  font-weight: bold;
+  margin: 15px 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* Campos de entrada */
+.input-login .email,
+.input-login .password,
+.A2F {
+  color: var(--color);
+  background: none;
+  border: solid 2px black;
+  border-radius: 30px;
+  width: 50%;
+  padding: 0.4rem 1rem;
+  margin-top: 10px;
+}
+
+/* Cambio específico: input de login offline en negro */
+.login-offline .input-login .email {
+  color: white;
+}
+
+/* === EFECTOS HOVER === */
+
+/* Hover general (Premium, No-Premium, Confirmar, Acceder, etc.) */
+.connect:hover {
+  background: #333;
+  color: #fff;
+  border-color: #000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  transform: scale(1.05);
+}
+
+/* Hover específico para botón Premium */
+.connect-button-online:hover {
+  background: gold;
+  color: #000;
+  border-color: gold;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+  transform: scale(1.05);
+}
+
+/* Hover específico para botón No-Premium */
+.connect-button-offline:hover {
+  background: #007bff;
+  color: #fff;
+  border-color: #007bff;
+  box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
+  transform: scale(1.05);
+}
+
+/* Hover para botones de cancelar */
+.cancel:hover {
+  background: #333;
+  color: #fff;
+  border-color: #000;
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Transición suave en todos los botones */
+.connect,
+.cancel {
+  transition: all 0.25s ease;
+}
+
+/* Ajuste visual opcional para contenedor de login */
+.login-options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Adaptación responsive (opcional) */
+@media (max-width: 768px) {
+  .login-tabs {
+    min-width: 80%;
+    padding: 20px;
+  }
+
+  .input-login .email,
+  .input-login .password,
+  .A2F {
+    width: 80%;
+  }
+
+  .connect,
+  .cancel {
+    padding: 0.5rem 3rem;
+    font-size: 1rem;
+  }
+}

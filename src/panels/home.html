@@ -1,0 +1,70 @@
+<audio id="bg-music" src="assets/audio/audio.mp3" autoplay loop></audio>
+
+<div class="container">
+    <div class="status-server">
+        <img class="server-status-icon" src="assets/images/icon.png">
+        <div class="server-status-infos">
+            <div class="server-status-name">Minecraft</div>
+            <div class="server-status-text">operationeel - 0 ms</div>
+        </div>
+        <div class="status-player-count">
+            <div class="player-count">0</div>
+        </div>
+    </div>
+
+    <div class="home-bottom">
+        <div class="new-tab">
+            <div class="news-list content-scroll"></div>
+        </div>
+        <div class="social-tab">
+            <div class="social-list content-scroll">
+                <div data-url="https://www.x.com/MecasafioMC" class="social-block">
+                    <div class="icon-twitter icon-social"></div>
+                </div>
+                <div data-url="https://discord.gg/EKgrdVyGmy" class="social-block">
+                    <div class="icon-discord icon-social"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="bottom-bar">
+        <div class="player-section">
+            <!-- Mover player-head existente -->
+            <div class="player-head"></div>
+        </div>
+
+        <div class="play-section">
+            <!-- Mover play-btn y instance-select existentes -->
+            <div class="play-instance">
+                <button class="play-btn">Jugar</button>
+                <div class="instance-select icon-arrow"></div>
+            </div>
+
+            <!-- ------- INSERTAR AQUI el bloque de "Descargando" del antiguo ------- -->
+            <div class="info-starting-game">
+                <div class="info-starting-game-text">Descargando...</div>
+                <!-- Ajusté max a 100 (es lo habitual). Si tu JS usa otro valor, ajústalo. -->
+                <progress value="0" max="100" class="progress-bar"></progress>
+            </div>
+            <!-- -------------------------------------------------------------------- -->
+        </div>
+
+        <!-- Mover settings-btn existente -->
+        <div class="settings-section">
+            <div class="settings-btn icon-settings"></div>
+        </div>
+    </div>
+
+    <div class="instance-popup">
+        <div class="instances-tab">
+            <div class="close-popup icon-close"></div>
+            <p>Seleccione una instancia</p>
+            <div class="instances-List"></div>
+        </div>
+    </div>
+</div>
+
+<!-- si no tienes ya un script, puedes enlazar este JS para demo -->
+<script src="assets/js/home.js"></script>
