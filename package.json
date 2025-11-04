@@ -9,7 +9,7 @@
         "email": "contacto.imnortuso@gmail.com",
         "url": "https://github.com/Mqrttin"
     },
-    "url": "https://porongaland.websr.fr/soulultrahardcore",
+    "url": "https://suh.fixfis.online/%20soulultrahardcore/",
     "scripts": {
         "start": "cross-env-shell NODE_ENV=dev electron .",
         "dev": "cross-env-shell DEV_TOOL=open nodemon --exec npm start",
