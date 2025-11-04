@@ -1,7 +1,7 @@
 {
     "name": "suh-launcher",
     "preductname": "Soul Ultra Hardcore",
-    "version": "1.0.5",
+    "version": "1.0.0",
     "description": "Launcher Oficial de Soul Ultra Hardcore",
     "main": "src/app.js",
     "author": {
