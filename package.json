@@ -1,11 +1,11 @@
 {
     "name": "suh-launcher",
     "preductname": "Soul Ultra Hardcore",
-    "version": "1.0.0",
+    "version": "1.5.0",
     "description": "Launcher Oficial de Soul Ultra Hardcore",
     "main": "src/app.js",
     "author": {
-        "name": "ImNotRuso",
+        "name": "ImNotRuso/Mqrttin",
         "email": "contacto.imnortuso@gmail.com",
         "url": "https://github.com/Mqrttin"
     },
