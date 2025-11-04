@@ -834,4 +834,36 @@ body {
   }
 }
 
+/* Logo esquina izquierda arriba */
+#logo-top-left {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 100px; /* ajusta tamaño */
+    height: auto;
+    z-index: 1000;
+}
+
+/* Logo esquina derecha arriba */
+#logo-top-right {
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    width: 100px;
+    height: auto;
+    z-index: 1000;
+}
+
+/* Efecto hover suave para logos */
+#logo-top-left,
+#logo-top-right {
+    transition: transform 0.2s ease; /* transición suave */
+    cursor: pointer; /* cambia el cursor al pasar sobre el logo */
+}
+
+#logo-top-left:hover,
+#logo-top-right:hover {
+    transform: scale(1.1); /* aumenta un 10% al pasar el mouse */
+}
+
 /* Fin del archivo home.css */

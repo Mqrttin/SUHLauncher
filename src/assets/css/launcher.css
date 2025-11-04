@@ -38,7 +38,7 @@ input::-webkit-inner-spin-button {
 
 .dragbar {
     position: fixed;
-    /* background: #00000080; */
+    background: #00000080;
     top: 0px;
     left: 0px;
     width: 100%;
@@ -149,4 +149,21 @@ input::-webkit-inner-spin-button {
     opacity: 1;
     z-index: 1;
     pointer-events: all;
+}
+
+.title-bar {
+    position: absolute;
+    left: 10px;
+    top: 0;
+    height: 26px;
+    line-height: 26px;
+    font-size: 14px;
+    font-weight: bold;
+    pointer-events: none;
+
+    /* Solo afecta al texto */
+    background: linear-gradient(90deg, #006d5b, #007c6a, #00977c, #00b89a, #42eacb);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }

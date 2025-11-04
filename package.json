@@ -1,15 +1,15 @@
 {
-    "name": "porongaland-launcher",
-    "preductname": "Poronga Land",
-    "version": "1.0.2",
-    "description": "Launcher Oficial de PorongaLand",
+    "name": "suh-launcher",
+    "preductname": "Soul Ultra Hardcore",
+    "version": "1.0.0",
+    "description": "Launcher Oficial de Soul Ultra Hardcore",
     "main": "src/app.js",
     "author": {
         "name": "ImNotRuso / Mqrttin",
-        "email": "contacto@gmail.com",
+        "email": "contacto.imnortuso@gmail.com",
         "url": "https://github.com/Mqrttin"
     },
-    "url": "https://porongaland.websr.fr/porongaland",
+    "url": "https://porongaland.websr.fr/soulultrahardcore",
     "scripts": {
         "start": "cross-env-shell NODE_ENV=dev electron .",
         "dev": "cross-env-shell DEV_TOOL=open nodemon --exec npm start",
@@ -26,6 +26,7 @@
         "discord-rich-presence": "^0.0.8",
         "electron-updater": "^6.1.8",
         "minecraft-java-core": "^3.10.4",
+        "minecraft-server-util": "^5.4.4",
         "node-bdd": "^2.0.4",
         "node-fetch": "^2.7.0",
         "xml-js": "^1.6.11"
@@ -41,6 +42,6 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Mqrttin/PorongaLand.git"
+        "url": "git+https://github.com/Mqrttin/SUHLauncher.git"
     }
 }

@@ -616,3 +616,95 @@
     text-decoration: underline;
   }
   
+/* Título con gradiente */
+.credits-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+    background: linear-gradient(90deg, #006d5b, #007c6a, #00977c, #00b89a, #42eacb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+}
+
+/* Divider con gradiente */
+.credits-divider {
+    border: none;
+    height: 3px;
+    width: 90%;
+    margin: 20px auto;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #006d5b, #007c6a, #00977c, #00b89a, #42eacb);
+    box-shadow: 0 0 10px #00b89a;
+}
+
+
+/* Caja semitransparente con scroll */
+.credits-box {
+    max-height: 53vh;  /* máximo 70% de la altura del viewport */
+    overflow-y: scroll; /* permite desplazamiento vertical */
+    padding: 15px;
+    width: 150%; /* tamaño más grande que el contenedor */
+    background: rgba(0, 0, 0, 0.5); /* opacidad 50% */
+    border-radius: 15px;
+
+    /* Centrado horizontal */
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Ocultar scrollbar para todos los navegadores modernos */
+.credits-box::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+.credits-box {
+    -ms-overflow-style: none;  /* IE 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.credits-box ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.credits-box li {
+    margin: 10px 0;
+    text-align: center;
+    color: white; /* texto visible sobre la caja oscura */
+}
+
+.wave-suh span {
+  color: #ff7b00;
+  display: inline-block;
+  text-shadow: 0 0 4px #ff7b00, 0 0 8px #ff7b00;
+  animation: waveGlow 1.2s infinite ease-in-out;
+}
+
+.wave-suh span:nth-child(1) { animation-delay: 0s; }
+.wave-suh span:nth-child(2) { animation-delay: 0.05s; }
+.wave-suh span:nth-child(3) { animation-delay: 0.10s; }
+.wave-suh span:nth-child(4) { animation-delay: 0.15s; }
+.wave-suh span:nth-child(5) { animation-delay: 0.20s; }
+.wave-suh span:nth-child(6) { animation-delay: 0.25s; }
+.wave-suh span:nth-child(7) { animation-delay: 0.30s; }
+.wave-suh span:nth-child(8) { animation-delay: 0.35s; }
+.wave-suh span:nth-child(9) { animation-delay: 0.40s; }
+.wave-suh span:nth-child(10){ animation-delay: 0.45s; }
+.wave-suh span:nth-child(11){ animation-delay: 0.50s; }
+.wave-suh span:nth-child(12){ animation-delay: 0.55s; }
+
+@keyframes waveGlow {
+  0%,100% {
+    text-shadow: 0 0 4px #ff7b00, 0 0 8px #ff7b00;
+    opacity: 0.6;
+    transform: translateY(0);
+  }
+  50% {
+    text-shadow: 0 0 8px #ffaa00, 0 0 18px #ffaa00, 0 0 32px #ff8800;
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}

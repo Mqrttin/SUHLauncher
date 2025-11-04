@@ -5,7 +5,7 @@
 
 const { app, ipcMain, nativeTheme, Tray, Menu } = require('electron');
 const { Microsoft } = require('minecraft-java-core');
-const { autoUpdater } = require('electron-updater')
+const { autoUpdater } = require('electron-updater');
 
 const path = require('path');
 const fs = require('fs');
@@ -13,46 +13,85 @@ const fs = require('fs');
 const UpdateWindow = require("./assets/js/windows/updateWindow.js");
 const MainWindow = require("./assets/js/windows/mainWindow.js");
 
-let tray = null;
+let tray = null; // Variable global para tray
 
-const rpc = require('discord-rich-presence')('1410084470450684034');
+const rpc = require('discord-rich-presence')('1430756350371168307');
 
+// --- Librería para consultar servidor Minecraft ---
+const { queryFull } = require('minecraft-server-util');
+
+// ---------------- Función para salir del launcher ----------------
 function quitLauncher() {
-    // Desconectar Discord RPC
     if (rpc) rpc.disconnect();
 
-    // Cierra ventana principal si existe y no está destruida
     const mainWin = MainWindow.getWindow();
     if (mainWin && !mainWin.isDestroyed()) {
         try { mainWin.destroy(); } catch (e) {}
     }
 
-    // Cierra ventana de update si existe y no está destruida
     const updateWin = UpdateWindow.getWindow();
     if (updateWin && !updateWin.isDestroyed()) {
         try { updateWin.destroy(); } catch (e) {}
     }
 
-    // Destruye tray si existe y no está destruido
+    // Destruye el tray si existe
     if (tray && !tray.isDestroyed()) {
         try { tray.destroy(); } catch (e) {}
     }
 
-    // Fuerza cierre total del proceso
     app.exit(0);
 }
 
+// ---------------- Función actualizada: Actualizar RPC con jugadores ----------------
+const { status } = require('minecraft-server-util');
+
+function actualizarJugadoresRPC() {
+    status('mc.universocraft.net', 25565) // usa el puerto de conexión normal del servidor
+        .then((response) => {
+            console.log('Estado del servidor:', response);
+
+            const jugadoresConectados = response.players?.online ?? 0;
+            const maxJugadores = response.players?.max ?? 0;
+
+            rpc.updatePresence({
+                state: `Jugadores: ${jugadoresConectados}/${maxJugadores}`,
+                details: 'Jugando Soul Ultra Hardcore',
+                startTimestamp: Date.now(),
+                largeImageKey: 'logo',
+                largeImageText: 'SoulUltraHardcore',
+                instance: true,
+            });
+        })
+        .catch((err) => {
+            console.error('Error al consultar servidor:', err);
+            rpc.updatePresence({
+                state: 'Servidor offline',
+                details: 'Intenta más tarde',
+                startTimestamp: Date.now(),
+                largeImageKey: 'logo',
+                largeImageText: 'SoulUltraHardcore',
+                instance: true,
+            });
+        });
+}
+
+// ---------------- RPC Inicial ----------------
 rpc.updatePresence({
-  state: 'Jugando',
-  details: 'Nacido de un mal chiste...',
-  startTimestamp: Date.now(),
-  largeImageKey: 'logo',
-  largeImageText: 'PorongaLand',
-  instance: true,
+    state: 'Jugando',
+    details: '¿Estás listo?',
+    startTimestamp: Date.now(),
+    largeImageKey: 'logo',
+    largeImageText: 'SoulUltraHardcore',
+    instance: true,
 });
 
 console.log("Discord Rich Presence activado.");
 
+// ---------------- Ejecutar actualización de jugadores cada 15s ----------------
+setInterval(actualizarJugadoresRPC, 15000);
+actualizarJugadoresRPC(); // Llamada inicial
+
+// ---------------- Resto de tu código original ----------------
 let dev = process.env.NODE_ENV === 'dev';
 
 if (dev) {
@@ -72,7 +111,11 @@ else app.whenReady().then(() => {
         UpdateWindow.createWindow();
     }
 
+    // ---------------- Tray antiguo ----------------
     tray = new Tray(path.join(__dirname, 'assets', 'images', 'icon.png'));
+
+    tray.setToolTip('Soul Ultra Hardcore Launcher'); // <-- NUEVA LÍNEA
+    
     const contextMenu = Menu.buildFromTemplate([
         { 
             label: 'Abrir Launcher',
@@ -91,47 +134,36 @@ else app.whenReady().then(() => {
             click: () => quitLauncher()
         }
     ]);
-
-    tray.setToolTip('PorongaLand');
     tray.setContextMenu(contextMenu);
 
-    tray.on('double-click', () => {
-        let win = MainWindow.getWindow();
-        if (win) {
-            win.show();
-            win.focus();
-        } else {
-            MainWindow.createWindow();
-        }
-    });
 
     let win = MainWindow.getWindow();
     if (win) {
         win.on('close', (event) => {
-            event.preventDefault(); // evita que Electron haga el cierre por defecto
-            quitLauncher(); // llama a tu función centralizada
+            event.preventDefault();
+            quitLauncher();
         });
     }
 });
 
-ipcMain.on('main-window-open', () => MainWindow.createWindow())
-ipcMain.on('main-window-dev-tools', () => MainWindow.getWindow().webContents.openDevTools({ mode: 'detach' }))
-ipcMain.on('main-window-dev-tools-close', () => MainWindow.getWindow().webContents.closeDevTools())
-ipcMain.on('main-window-close', () => MainWindow.destroyWindow())
-ipcMain.on('main-window-reload', () => MainWindow.getWindow().reload())
-ipcMain.on('main-window-progress', (event, options) => MainWindow.getWindow().setProgressBar(options.progress / options.size))
-ipcMain.on('main-window-progress-reset', () => MainWindow.getWindow().setProgressBar(-1))
-ipcMain.on('main-window-progress-load', () => MainWindow.getWindow().setProgressBar(2))
-ipcMain.on('main-window-minimize', () => MainWindow.getWindow().minimize())
+ipcMain.on('main-window-open', () => MainWindow.createWindow());
+ipcMain.on('main-window-dev-tools', () => MainWindow.getWindow().webContents.openDevTools({ mode: 'detach' }));
+ipcMain.on('main-window-dev-tools-close', () => MainWindow.getWindow().webContents.closeDevTools());
+ipcMain.on('main-window-close', () => MainWindow.destroyWindow());
+ipcMain.on('main-window-reload', () => MainWindow.getWindow().reload());
+ipcMain.on('main-window-progress', (event, options) => MainWindow.getWindow().setProgressBar(options.progress / options.size));
+ipcMain.on('main-window-progress-reset', () => MainWindow.getWindow().setProgressBar(-1));
+ipcMain.on('main-window-progress-load', () => MainWindow.getWindow().setProgressBar(2));
+ipcMain.on('main-window-minimize', () => MainWindow.getWindow().minimize());
 
-ipcMain.on('update-window-close', () => UpdateWindow.destroyWindow())
-ipcMain.on('update-window-dev-tools', () => UpdateWindow.getWindow().webContents.openDevTools({ mode: 'detach' }))
-ipcMain.on('update-window-progress', (event, options) => UpdateWindow.getWindow().setProgressBar(options.progress / options.size))
-ipcMain.on('update-window-progress-reset', () => UpdateWindow.getWindow().setProgressBar(-1))
-ipcMain.on('update-window-progress-load', () => UpdateWindow.getWindow().setProgressBar(2))
+ipcMain.on('update-window-close', () => UpdateWindow.destroyWindow());
+ipcMain.on('update-window-dev-tools', () => UpdateWindow.getWindow().webContents.openDevTools({ mode: 'detach' }));
+ipcMain.on('update-window-progress', (event, options) => UpdateWindow.getWindow().setProgressBar(options.progress / options.size));
+ipcMain.on('update-window-progress-reset', () => UpdateWindow.getWindow().setProgressBar(-1));
+ipcMain.on('update-window-progress-load', () => UpdateWindow.getWindow().setProgressBar(2));
 
-ipcMain.handle('path-user-data', () => app.getPath('userData'))
-ipcMain.handle('appData', e => app.getPath('appData'))
+ipcMain.handle('path-user-data', () => app.getPath('userData'));
+ipcMain.handle('appData', e => app.getPath('appData'));
 
 ipcMain.on('main-window-maximize', () => {
     if (MainWindow.getWindow().isMaximized()) {
@@ -139,12 +171,11 @@ ipcMain.on('main-window-maximize', () => {
     } else {
         MainWindow.getWindow().maximize();
     }
-})
+});
 
-ipcMain.on('main-window-hide', () => MainWindow.getWindow().hide())
-ipcMain.on('main-window-show', () => MainWindow.getWindow().show())
+ipcMain.on('main-window-hide', () => MainWindow.getWindow().hide());
+ipcMain.on('main-window-show', () => MainWindow.getWindow().show());
 
-// 🔹 Pausar y reanudar música al iniciar/cerrar Minecraft
 ipcMain.on('minecraft-launch', () => {
     const win = MainWindow.getWindow();
     if (win) win.webContents.send('pause-audio');
@@ -157,35 +188,15 @@ ipcMain.on('minecraft-close', () => {
 
 ipcMain.handle('Microsoft-window', async (_, client_id) => {
     return await new Microsoft(client_id).getAuth();
-})
-
-ipcMain.handle('is-dark-theme', (_, theme) => {
-    if (theme === 'dark') return true
-    if (theme === 'light') return false
-    return nativeTheme.shouldUseDarkColors;
-})
-
-// 🔹 Nuevos IPC para cerrar tray y app desde el popup
-ipcMain.on('tray-destroy', () => {
-    if (tray) tray.destroy();
 });
 
-ipcMain.on('app-quit', () => quitLauncher());
-
-app.on('browser-window-created', (_, window) => {
-    const mainWin = MainWindow.getWindow();
-
-    window.on('close', (event) => {
-        if (window === mainWin) {
-            event.preventDefault();
-            quitLauncher();
-        }
-    });
+ipcMain.handle('is-dark-theme', (_, theme) => {
+    if (theme === 'dark') return true;
+    if (theme === 'light') return false;
+    return nativeTheme.shouldUseDarkColors;
 });
 
 app.on('window-all-closed', () => {
-    // No cerrar la app si estamos usando tray
-    // Solo cierra en Mac si es necesario
     if (process.platform !== 'darwin') return;
 });
 
@@ -199,10 +210,10 @@ ipcMain.handle('update-app', async () => {
             reject({
                 error: true,
                 message: error
-            })
-        })
-    })
-})
+            });
+        });
+    });
+});
 
 autoUpdater.on('update-available', () => {
     const updateWindow = UpdateWindow.getWindow();
@@ -211,7 +222,7 @@ autoUpdater.on('update-available', () => {
 
 ipcMain.on('start-update', () => {
     autoUpdater.downloadUpdate();
-})
+});
 
 autoUpdater.on('update-not-available', () => {
     const updateWindow = UpdateWindow.getWindow();
@@ -225,7 +236,7 @@ autoUpdater.on('update-downloaded', () => {
 autoUpdater.on('download-progress', (progress) => {
     const updateWindow = UpdateWindow.getWindow();
     if (updateWindow) updateWindow.webContents.send('download-progress', progress);
-})
+});
 
 autoUpdater.on('error', (err) => {
     const updateWindow = UpdateWindow.getWindow();

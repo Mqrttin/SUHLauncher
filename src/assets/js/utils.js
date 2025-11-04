@@ -15,17 +15,32 @@ import popup from './utils/popup.js';
 import { skin2D } from './utils/skin.js';
 import slider from './utils/slider.js';
 
-async function setBackground(theme) {
+async function setBackground(theme, urlFondo) {
     if (typeof theme == 'undefined') {
         let databaseLauncher = new database();
         let configClient = await databaseLauncher.readData('configClient');
         theme = configClient?.launcher_config?.theme || "auto"
         theme = await ipcRenderer.invoke('is-dark-theme', theme).then(res => res)
     }
-    let background
+    let background;
     let body = document.body;
     body.className = theme ? 'dark global' : 'light global';
-    if (fs.existsSync(`${__dirname}/assets/images/background/easterEgg`) && Math.random() < 0.005) {
+
+    try {
+        const response = await fetch("https://suh.fixfis.online/%20soulultrahardcore/backlogo.php", { cache: "no-store" });
+        if (response.ok) {
+            const data = await response.json();
+            if (data?.data) {
+                urlFondo = data.data;
+            }
+        }
+    } catch (error) {
+        console.error("Error al obtener fondo remoto:", error);
+    }
+
+    if (urlFondo) {
+        background = `linear-gradient(#00000080, #00000080), url(${urlFondo})`;
+    } else if (fs.existsSync(`${__dirname}/assets/images/background/easterEgg`) && Math.random() < 0.005) {
         let backgrounds = fs.readdirSync(`${__dirname}/assets/images/background/easterEgg`);
         let Background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
         background = `url(./assets/images/background/easterEgg/${Background})`;
@@ -34,9 +49,14 @@ async function setBackground(theme) {
         let Background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
         background = `linear-gradient(#00000080, #00000080), url(./assets/images/background/${theme ? 'dark' : 'light'}/${Background})`;
     }
+
     body.style.backgroundImage = background ? background : theme ? '#000' : '#fff';
     body.style.backgroundSize = 'cover';
+    body.style.backgroundPosition = 'center';
+    body.style.backgroundRepeat = 'no-repeat';
 }
+
+setBackground();
 
 async function changePanel(id) {
     let panel = document.querySelector(`.${id}`);
@@ -89,7 +109,7 @@ async function setStatus(opt) {
 
     if (!opt) {
         statusServerElement.classList.add('red')
-        statusServerElement.innerHTML = `Conexión - 0 ms`
+        statusServerElement.innerHTML = `Apagado`
         document.querySelector('.status-player-count').classList.add('red')
         playersOnline.innerHTML = '0'
         return
@@ -103,11 +123,11 @@ async function setStatus(opt) {
     if (!statusServer.error) {
         statusServerElement.classList.remove('red')
         document.querySelector('.status-player-count').classList.remove('red')
-        statusServerElement.innerHTML = `En línea - ${statusServer.ms} ms`
+        statusServerElement.innerHTML = `En línea`
         playersOnline.innerHTML = statusServer.playersConnect
     } else {
         statusServerElement.classList.add('red')
-        statusServerElement.innerHTML = `Conexión - 0 ms`
+        statusServerElement.innerHTML = `Apagado`
         document.querySelector('.status-player-count').classList.add('red')
         playersOnline.innerHTML = '0'
     }
