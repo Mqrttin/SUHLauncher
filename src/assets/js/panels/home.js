@@ -147,6 +147,10 @@ class Home {
     }
 
     async startGame() {
+
+        const fs = require('fs');
+        const path = require('path');
+
         let launch = new Launch()
         let configClient = await this.db.readData('configClient')
         let instance = await config.getInstanceList()
@@ -176,9 +180,7 @@ class Home {
             },
 
             verify: options.verify,
-
             ignored: [...options.ignored],
-
             javaPath: configClient.java_config.java_path,
 
             screen: {
@@ -193,6 +195,49 @@ class Home {
         }
 
         ipcRenderer.send('minecraft-launch');
+
+        // --- 🔧 LIMPIEZA AUTOMÁTICA MULTIVERSIÓN ---
+        try {
+            const baseDir = path.join(process.env.APPDATA, '.SUH');
+
+            // 1️⃣ Borrar librerías viejas ASM 9.6
+            const asmDir = path.join(baseDir, 'libraries', 'org', 'ow2', 'asm', '9.6');
+            const asmJar = path.join(baseDir, 'libraries', 'org', 'ow2', 'asm', 'asm-9.6.jar');
+            if (fs.existsSync(asmDir)) {
+                fs.rmSync(asmDir, { recursive: true, force: true });
+                console.log('[Launcher]: Eliminada carpeta vieja ASM 9.6');
+            }
+            if (fs.existsSync(asmJar)) {
+                fs.rmSync(asmJar, { force: true });
+                console.log('[Launcher]: Eliminado archivo asm-9.6.jar');
+            }
+
+            // 2️⃣ Revisar todas las versiones y limpiar referencias
+            const versionsDir = path.join(baseDir, 'versions');
+            if (fs.existsSync(versionsDir)) {
+                const versions = fs.readdirSync(versionsDir).filter(v => {
+                    const jsonFile = path.join(versionsDir, v, `${v}.json`);
+                    return fs.existsSync(jsonFile);
+                });
+
+                for (const version of versions) {
+                    const versionPath = path.join(versionsDir, version, `${version}.json`);
+                    try {
+                        let json = fs.readFileSync(versionPath, 'utf8');
+                        if (json.includes('org.ow2.asm:asm:9.6')) {
+                            json = json.replace(/,\s*{\s*"downloads"[\s\S]+?"org\.ow2\.asm:asm:9\.6"[\s\S]+?}/, '');
+                            fs.writeFileSync(versionPath, json);
+                            console.log(`[Launcher]: Eliminada referencia a ASM 9.6 en ${version}.json`);
+                        }
+                    } catch (err) {
+                        console.warn(`[Launcher]: No se pudo editar ${version}.json:`, err);
+                    }
+                }
+            }
+        } catch (err) {
+            console.warn('[Launcher]: Error al limpiar ASM 9.6 automáticamente:', err);
+        }
+        // --- FIN LIMPIEZA ---
 
         launch.Launch(opt);
 
@@ -248,35 +293,30 @@ class Home {
             console.log(e);
         })
 
-launch.on('close', code => {
-    if (configClient.launcher_config.closeLauncher == 'close-launcher') {
-        ipcRenderer.send("main-window-show")
-    };
-    ipcRenderer.send('main-window-progress-reset')
+        launch.on('close', code => {
+            if (configClient.launcher_config.closeLauncher == 'close-launcher') {
+                ipcRenderer.send("main-window-show")
+            };
+            ipcRenderer.send('main-window-progress-reset')
 
-    // Ocultar estado de carga
-    infoStartingBOX.style.display = "none"
-    infoStartingBOX.removeAttribute("style") // <--- agregado
+            infoStartingBOX.style.display = "none"
+            infoStartingBOX.removeAttribute("style")
 
-    playInstanceBTN.style.display = "flex"
-    infoStarting.innerHTML = `Verificación`
+            playInstanceBTN.style.display = "flex"
+            infoStarting.innerHTML = `Verificación`
 
-    new logger(pkg.name, '#7289da');
-    console.log('Cerrar');
-});
-
-
+            new logger(pkg.name, '#7289da');
+            console.log('Cerrar');
+        });
 
         launch.on('error', err => {
             let popupError = new popup()
-
             popupError.openPopup({
                 title: 'Error',
                 content: err.error,
                 color: 'red',
                 options: true
             })
-
             if (configClient.launcher_config.closeLauncher == 'close-launcher') {
                 ipcRenderer.send("main-window-show")
             };
@@ -298,4 +338,5 @@ launch.on('close', code => {
         return { year: year, month: allMonth[month - 1], day: day }
     }
 }
+
 export default Home;
