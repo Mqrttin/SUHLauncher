@@ -708,3 +708,37 @@
     transform: translateY(-2px);
   }
 }
+
+.wave-purple span {
+  color: #b300ff;
+  display: inline-block;
+  text-shadow: 0 0 6px #b300ff, 0 0 12px #b300ff;
+  animation: wavePurpleGlow 1.2s infinite ease-in-out;
+}
+
+/* delays */
+.wave-purple span:nth-child(1) { animation-delay: 0s; }
+.wave-purple span:nth-child(2) { animation-delay: 0.05s; }
+.wave-purple span:nth-child(3) { animation-delay: 0.10s; }
+.wave-purple span:nth-child(4) { animation-delay: 0.15s; }
+.wave-purple span:nth-child(5) { animation-delay: 0.20s; }
+.wave-purple span:nth-child(6) { animation-delay: 0.25s; }
+.wave-purple span:nth-child(7) { animation-delay: 0.30s; }
+.wave-purple span:nth-child(8) { animation-delay: 0.35s; }
+.wave-purple span:nth-child(9) { animation-delay: 0.40s; }
+.wave-purple span:nth-child(10){ animation-delay: 0.45s; }
+.wave-purple span:nth-child(11){ animation-delay: 0.50s; }
+.wave-purple span:nth-child(12){ animation-delay: 0.55s; }
+
+@keyframes wavePurpleGlow {
+  0%,100% {
+    opacity: 0.6;
+    transform: translateY(0);
+    text-shadow: 0 0 6px #b300ff, 0 0 12px #b300ff;
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-2px);
+    text-shadow: 0 0 10px #d730ff, 0 0 20px #d730ff, 0 0 34px #b300ff;
+  }
+}
