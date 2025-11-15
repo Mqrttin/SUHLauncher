@@ -66,7 +66,7 @@ function actualizarJugadoresRPC() {
             console.error('Error al consultar servidor:', err);
             rpc.updatePresence({
                 state: 'Servidor offline',
-                details: 'Intenta más tarde',
+                details: '¿Ha pasado algo?',
                 startTimestamp: Date.now(),
                 largeImageKey: 'logo',
                 largeImageText: 'SoulUltraHardcore',
